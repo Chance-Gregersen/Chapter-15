@@ -1,0 +1,73 @@
+import javafx.animation.FadeTransition;
+import javafx.animation.PathTransition;
+import javafx.animation.PathTransition.OrientationType;
+import javafx.animation.Timeline;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+import javafx.scene.Group;
+
+public class App extends Application {
+    private static double WIDTH = 0;
+    private static double HEIGHT = 0;
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        Pane pane = new Pane();
+
+        Polygon poly = new Polygon();
+        poly.getPoints().addAll(new Double[]{ 
+            300.0, 100.0, 
+            500.0, 300.0, 
+            400.0, 500.0, 
+            200.0, 500.0, 
+            100.0, 300.0,
+         }); 
+
+         Group root = new Group(poly);
+
+        poly.setFill(Color.WHITESMOKE);
+        poly.setStroke(Color.BLACK);
+
+
+        Rectangle Rec = new Rectangle();
+        Rec.setX(300.0f); 
+        Rec.setY(100.0f); 
+        Rec.setWidth(150.0f); 
+        Rec.setHeight(100.0f);
+
+        pane.getChildren().addAll(poly, Rec);
+
+        PathTransition path = new PathTransition();
+        path.setDuration(Duration.millis(3000));
+        path.setPath(poly);
+        path.setNode(Rec);
+        path.setOrientation(OrientationType.NONE);
+        path.setCycleCount(Timeline.INDEFINITE);
+        path.setAutoReverse(false);
+        FadeTransition fade = new FadeTransition(Duration.millis(3000), Rec);
+        fade.setAutoReverse(false);
+        fade.setFromValue(1.0);
+        fade.setToValue(0.1);
+        fade.setCycleCount(Timeline.INDEFINITE);
+        Rec.setOnMouseClicked(e -> {
+            path.play();
+            fade.play();
+        });
+
+        Scene scene = new Scene(pane, WIDTH, HEIGHT);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Moving Block");
+        primaryStage.show();
+    }
+
+
+    public static void main(String[] args) {
+        Application.launch(args);
+    }
+}
